@@ -2,7 +2,7 @@
 #define CONTROLLERTRACKINGALGORITHM_H
 
 #include "Interfaces/IController/IController.h"
-#include "Model/BioTrackerTrackingAlgorithm.h"
+#include "../Model/BioTrackerTrackingAlgorithm.h"
 #include "Interfaces/IBioTrackerContext.h"
 #include "Interfaces/IModel/IModelDataExporter.h"
 

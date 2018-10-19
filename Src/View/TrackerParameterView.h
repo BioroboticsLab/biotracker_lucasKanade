@@ -2,7 +2,7 @@
 #define TRACKERPARAMETERVIEW_H
 
 #include "Interfaces/IView/IViewWidget.h"
-#include "Model/TrackerParameter.h"
+#include "../Model/TrackerParameter.h"
 
 namespace Ui {
 	class TrackerParameterView;

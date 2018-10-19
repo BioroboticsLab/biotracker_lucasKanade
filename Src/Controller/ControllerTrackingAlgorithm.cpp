@@ -1,9 +1,9 @@
 #include "ControllerTrackingAlgorithm.h"
 #include "ControllerTrackedComponent.h"
 
-#include "Model/TrackerParameter.h"
-#include "View/TrackerParameterView.h"
-#include "View/TrackedElementView.h"
+#include "../Model/TrackerParameter.h"
+#include "../View/TrackerParameterView.h"
+#include "../View/TrackedElementView.h"
 
 ControllerTrackingAlgorithm::ControllerTrackingAlgorithm(QObject *parent, IBioTrackerContext *context, ENUMS::CONTROLLERTYPE ctr) :
     IController(parent, context, ctr)

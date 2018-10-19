@@ -4,7 +4,7 @@
 
 #include "Interfaces/IModel/IModel.h"
 #include "settings/Settings.h"
-#include "Model/ParamNames.h"
+#include "ParamNames.h"
 
 class TrackerParameter : public IModel
 {
