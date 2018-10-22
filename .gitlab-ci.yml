@@ -15,7 +15,7 @@ build ubuntu-18.04:
       - build
     expire_in: 1 day
   before_script:
-    - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/2576/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
+    - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3608/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
     - 7z e artifacts.zip
     - 'curl -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3610/jobs/artifacts/master/download?job=package%20ubuntu-18.04"'
     - 7z e artifacts.zip
@@ -50,7 +50,7 @@ build windows:
       - build
     expire_in: 1 day
   before_script:
-    - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/2576/jobs/artifacts/master/download?job=package%20windows"'
+    - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3608/jobs/artifacts/master/download?job=package%20windows"'
     - 7z e artifacts.zip
     - 'curl.exe -o artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://git.imp.fu-berlin.de/api/v4/projects/3610/jobs/artifacts/master/download?job=package%20windows"'
     - 7z e artifacts.zip
