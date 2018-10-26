@@ -4,8 +4,6 @@
 #include "Controller/ControllerTrackingAlgorithm.h"
 #include "Controller/ControllerTrackedComponent.h"
 
-#include "util/singleton.h"
-
 #include "View/TrackedElementView.h"
 #include "TrackedComponents/TrackedComponentFactory.h"
 
