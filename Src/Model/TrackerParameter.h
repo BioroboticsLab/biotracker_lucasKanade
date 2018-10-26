@@ -3,16 +3,15 @@
 
 
 #include "Interfaces/IModel/IModel.h"
-#include "settings/Settings.h"
+#include "Interfaces/IController/IController.h"
 #include "ParamNames.h"
+#include "../Config.h"
 
 class TrackerParameter : public IModel
 {
     Q_OBJECT
 public:
-    TrackerParameter(QObject *parent = 0);
-
-	BioTracker::Core::Settings *getSettings() { return _settings; };
+    TrackerParameter(IController *parent = 0);
 
 	int getWndSize() { return m_wndSize; };
 	void setWndSize(int x) {
@@ -24,17 +23,16 @@ public:
 		int wndSize)
 	{
         m_wndSize = wndSize;
-		_settings->setParam(LUKASKANADE::TRACKERPARAM::WNDSIZE, wndSize);
+		_cfg->WndSize = wndSize;
 		Q_EMIT notifyView();
 	};
 
 
 
 private:
-	BioTracker::Core::Settings *_settings;
 
 	int m_wndSize;
-
+	Config *_cfg;
 };
 
 #endif // TRACKERPARAMETER_H

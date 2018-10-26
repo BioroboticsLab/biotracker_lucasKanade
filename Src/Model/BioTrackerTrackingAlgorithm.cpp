@@ -2,14 +2,14 @@
 #include <future>
 #include "TrackedComponents/TrackedComponentFactory.h"
 #include <chrono>
+#include "../Config.h"
+#include "../Controller/ControllerTrackingAlgorithm.h"
 
-#include "settings/Settings.h"
-
-BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IModel *parameter, IModel *trajectory) 
+BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IModel *parameter, IModel *trajectory) 
 {
+	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
 	_TrackingParameter = (TrackerParameter*)parameter;
 	_TrackedTrajectoryMajor = (TrackedTrajectory*)trajectory;
-	BioTracker::Core::Settings *set = _TrackingParameter->getSettings();
 
     _lastImage = nullptr;
     _lastFramenumber = -1;

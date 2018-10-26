@@ -1,13 +1,11 @@
 #include "TrackerParameter.h"
-#include "util/singleton.h"
+#include "../Controller/ControllerTrackingAlgorithm.h"
 
-TrackerParameter::TrackerParameter(QObject *parent) :
+TrackerParameter::TrackerParameter(IController *parent) :
     IModel(parent)
 {
-	_settings = BioTracker::Util::TypedSingleton<BioTracker::Core::Settings>::getInstance(LUKASKANADE::CONFIGPARAM::CONFIG_INI_FILE);
-	//_settings = new BioTracker::Core::Settings(CONFIGPARAM::CONFIG_INI_FILE);
-
-	m_wndSize = _settings->getValueOrDefault(LUKASKANADE::TRACKERPARAM::WNDSIZE, 31);
+	_cfg = static_cast<ControllerTrackingAlgorithm*>(parent)->getConfig();
+	m_wndSize = _cfg->WndSize;
 
 
     Q_EMIT notifyView();

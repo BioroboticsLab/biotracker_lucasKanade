@@ -10,6 +10,7 @@
 #include "QPointer"
 #include "memory"
 #include "QPoint"
+#include "Config.h"
 
 class Q_DECL_EXPORT BioTrackerPlugin : public IBioTrackerPlugin {
 	Q_OBJECT
@@ -70,6 +71,7 @@ private:
 	IController *m_AreaDescrController;
 
 	IBioTrackerContext *m_PluginContext;
+	Config *_cfg;
 
 public:
 	QList<ENUMS::COREPERMISSIONS> m_CorePermissions;

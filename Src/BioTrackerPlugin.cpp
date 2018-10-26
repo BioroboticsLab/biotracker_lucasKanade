@@ -5,7 +5,6 @@
 #include "Controller/ControllerTrackedComponent.h"
 
 #include "util/singleton.h"
-#include "settings/Settings.h"
 
 #include "View/TrackedElementView.h"
 #include "TrackedComponents/TrackedComponentFactory.h"
@@ -36,7 +35,8 @@ Q_EXPORT_PLUGIN2(BioTrackerPlugin, BioTrackerPlugin)
 
 
 void BioTrackerPlugin::createPlugin() {
-	m_PluginContext = new PluginContext();
+	_cfg = new Config();
+	m_PluginContext = new PluginContext(this, _cfg);
 	m_PluginContext->createApplication();
 
 	IController * ctr = m_PluginContext->requestController(ENUMS::CONTROLLERTYPE::COMPONENT);
@@ -114,21 +114,12 @@ void BioTrackerPlugin::receiveSwapIds(IModelTrackedTrajectory * trajectory0, IMo
 }
 
 void BioTrackerPlugin::sendCorePermissions() {
-	// get plugin settings
-	BioTracker::Core::Settings *pluginSettings = BioTracker::Util::TypedSingleton<BioTracker::Core::Settings>::getInstance(LUKASKANADE::CONFIGPARAM::CONFIG_INI_FILE);
-
 	// signal permissions
-	bool enableView = pluginSettings->getValueOrDefault(LUKASKANADE::GUIPARAM::ENABLE_CORE_COMPONENT_VIEW, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTVIEW, enableView));
-	bool enableMove = pluginSettings->getValueOrDefault(LUKASKANADE::GUIPARAM::ENABLE_CORE_COMPONENT_MOVE, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTMOVE, enableMove));
-	bool enableRemove = pluginSettings->getValueOrDefault(LUKASKANADE::GUIPARAM::ENABLE_CORE_COMPONENT_REMOVE, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTREMOVE, enableRemove));
-	bool enableSwap = pluginSettings->getValueOrDefault(LUKASKANADE::GUIPARAM::ENABLE_CORE_COMPONENT_ID_SWAP, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTSWAP, enableSwap));
-	bool enableAdd = pluginSettings->getValueOrDefault(LUKASKANADE::GUIPARAM::ENABLE_CORE_COMPONENT_ADD, true);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTADD, enableAdd));
-	bool enableRotate = pluginSettings->getValueOrDefault(LUKASKANADE::GUIPARAM::ENABLE_CORE_COMPONENT_ROTATE, false);
-	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTROTATE, enableRotate));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTVIEW, _cfg->EnableView));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTMOVE, _cfg->EnableMove));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTREMOVE, _cfg->EnableRemove));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTSWAP, _cfg->EnableSwap));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTADD, _cfg->EnableAdd));
+	Q_EMIT emitCorePermission(std::pair<ENUMS::COREPERMISSIONS, bool>(ENUMS::COREPERMISSIONS::COMPONENTROTATE, _cfg->EnableRotate));
 }
 

@@ -5,7 +5,6 @@
 #include "QPainter"
 #include "QGraphicsScene"
 #include <QGraphicsSceneHoverEvent>
-#include "settings/Settings.h"
 #include "../Model/ParamNames.h"
 #include "util/misc.h"
 

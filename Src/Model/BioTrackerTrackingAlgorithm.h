@@ -3,6 +3,7 @@
 
 
 #include "Interfaces/IModel/IModel.h"
+#include "Interfaces/IController/IController.h"
 
 #include "TrackerParameter.h"
 
@@ -13,12 +14,13 @@
 #include "TrackedComponents/TrackedTrajectory.h"
 #include "Interfaces/IModel/IModelAreaDescriptor.h"
 #include <iostream>
+#include "../Config.h"
 
 class BioTrackerTrackingAlgorithm : public IModelTrackingAlgorithm
 {
     Q_OBJECT
 public:
-    BioTrackerTrackingAlgorithm(IModel* parameter, IModel* trajectory);
+    BioTrackerTrackingAlgorithm(IController *parent, IModel* parameter, IModel* trajectory);
 	~BioTrackerTrackingAlgorithm();
 
 Q_SIGNALS:
@@ -47,6 +49,7 @@ private:
 
     std::shared_ptr<cv::Mat> _lastImage;
     uint _lastFramenumber;
+	Config *_cfg;
 };
 
 #endif // BIOTRACKERTRACKINGALGORITHM_H
