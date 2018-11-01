@@ -5,7 +5,7 @@
 #include "Interfaces/IBioTrackerContext.h"
 
 #include "Interfaces/IBioTrackerPlugin.h"
-#include "TrackedComponents/TrackedComponentFactory.h"
+#include "Utility/TrackedComponents/TrackedComponentFactory.h"
 
 #include "QPointer"
 #include "memory"
@@ -19,6 +19,7 @@ class Q_DECL_EXPORT BioTrackerPlugin : public IBioTrackerPlugin {
 
   public:
 	BioTrackerPlugin();
+	~BioTrackerPlugin();
 
 	// IBioTrackerPlugin interface
 	IView* getTrackerParameterWidget();

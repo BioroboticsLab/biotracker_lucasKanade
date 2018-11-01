@@ -1,12 +1,12 @@
 #include "TrackedElementView.h"
-#include "TrackedComponents/TrackedElement.h"
-#include "TrackedComponents/TrackedTrajectory.h"
+#include "Utility/TrackedComponents/TrackedElement.h"
+#include "Utility/TrackedComponents/TrackedTrajectory.h"
 #include "QBrush"
 #include "QPainter"
 #include "QGraphicsScene"
 #include <QGraphicsSceneHoverEvent>
 #include "../Model/ParamNames.h"
-#include "util/misc.h"
+#include "Utility/misc.h"
 
 class QGraphicsSceneHoverEvent;
 

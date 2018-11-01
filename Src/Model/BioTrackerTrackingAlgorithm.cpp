@@ -1,6 +1,6 @@
 #include "BioTrackerTrackingAlgorithm.h"
 #include <future>
-#include "TrackedComponents/TrackedComponentFactory.h"
+#include "Utility/TrackedComponents/TrackedComponentFactory.h"
 #include <chrono>
 #include "../Config.h"
 #include "../Controller/ControllerTrackingAlgorithm.h"

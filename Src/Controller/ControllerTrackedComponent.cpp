@@ -1,6 +1,6 @@
 #include "ControllerTrackedComponent.h"
-#include "TrackedComponents/TrackedElement.h"
-#include "TrackedComponents/TrackedTrajectory.h"
+#include "Utility/TrackedComponents/TrackedElement.h"
+#include "Utility/TrackedComponents/TrackedTrajectory.h"
 #include "../View/TrackedElementView.h"
 #include "qdebug.h"
 #include "qmath.h"

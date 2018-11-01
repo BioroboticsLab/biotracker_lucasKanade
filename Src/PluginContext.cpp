@@ -7,7 +7,6 @@ PluginContext::PluginContext(QObject *parent, Config *cfg) :
 	IBioTrackerContext(parent)
 {
 	_cfg = cfg;
-    _cfg->load(Config::configLocation, "LukasKanadeTrackerConfig.ini");
 	ControllerTrackedComponent* ComponentController = new ControllerTrackedComponent(this, this, ENUMS::CONTROLLERTYPE::COMPONENT);
 	ControllerTrackingAlgorithm* TrackingController = new ControllerTrackingAlgorithm(this, this, ENUMS::CONTROLLERTYPE::TRACKING);
 	ComponentController->setConfig(_cfg);

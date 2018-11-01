@@ -5,9 +5,14 @@
 #include "Controller/ControllerTrackedComponent.h"
 
 #include "View/TrackedElementView.h"
-#include "TrackedComponents/TrackedComponentFactory.h"
+#include "Utility/TrackedComponents/TrackedComponentFactory.h"
 
 BioTrackerPlugin::BioTrackerPlugin() {
+}
+
+BioTrackerPlugin::~BioTrackerPlugin() {
+    _cfg->save(Config::configLocation, "LukasKanadeTrackerConfig.ini");
+	delete _cfg;
 }
 
 IView* BioTrackerPlugin::getTrackerParameterWidget() {
@@ -27,13 +32,9 @@ IModelTrackedComponentFactory *BioTrackerPlugin::getComponentFactory() {
     return new TrackedComponentFactory();
 }
 
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(BioTrackerPlugin, BioTrackerPlugin)
-#endif // QT_VERSION < 0x050000
-
-
 void BioTrackerPlugin::createPlugin() {
 	_cfg = new Config();
+    _cfg->load(Config::configLocation, "LukasKanadeTrackerConfig.ini");
 	m_PluginContext = new PluginContext(this, _cfg);
 	m_PluginContext->createApplication();
 
