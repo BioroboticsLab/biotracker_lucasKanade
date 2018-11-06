@@ -2,12 +2,19 @@
 #### Biotracker: LukasKanade
 ##############################################################
 
-include(BT_Utility/VSSugar)
+set(TN bt_lukaskanade.bio_tracker)
+
+if( CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR )
+    include(BT_Utility/VSSugar)
+    include(BT_Utility/TrackerPlugin)
+else()
+    include(${BT_Utility_SOURCE_DIR}/cmake/VSSugar.cmake)
+    include(${BT_Utility_SOURCE_DIR}/cmake/TrackerPlugin.cmake)
+endif()
+
 VSSourceGroups(${CMAKE_CURRENT_LIST_DIR})
 
-set(TN bt_lukaskanade.bio_tracker)
-include(BT_Utility/TrackerPlugin)
-
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 set_target_properties(${TN} PROPERTIES AUTOMOC ON AUTOUIC ON AUTORCC ON)
 
 install(TARGETS ${TN} OPTIONAL DESTINATION .)
