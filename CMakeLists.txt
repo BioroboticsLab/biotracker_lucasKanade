@@ -1,21 +1,21 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 
-exec_program("git" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe --tags --abbrev=0" OUTPUT_VARIABLE GIT_TAG)
+file(READ VERSION PROJECT_VERSION)
 
-project(BT_lukaskanade.tracker)
+project(biotracker-lucaskanade.bio_tracker)
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     option(PACKAGE_WINDOWS_MSI "Create .msi package" OFF)
 endif()
 option(PACKAGE_TXZ "Create .tar.xz package" OFF)
 
-find_package(BT_Utility 0.1.1 REQUIRED)
+find_package(biotracker-utility 0.2 REQUIRED)
 
 add_subdirectory(Src)
 
 include(cmake/Locate.cmake)
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-    install(TARGETS ${TN} DESTINATION .)
+    install(TARGETS ${target} DESTINATION .)
 
     option(INSTALL_REQUIRED_SYSTEM_LIBRARIES "Install required system libraries" OFF)
     if(INSTALL_REQUIRED_SYSTEM_LIBRARIES)
@@ -36,16 +36,16 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
     install(FILES ${shared_libraries} DESTINATION .)
 endif()
 
-set(CPACK_PACKAGE_NAME "BioTracker Plugin LukasKanade")
+set(CPACK_PACKAGE_NAME "BioTracker Plugin lucaskanade")
 set(CPACK_PACKAGE_VENDOR "Biorobotics Lab / FU Berlin")
 
-set(CPACK_PACKAGE_VERSION ${GIT_TAG})
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 
 if(PACKAGE_WINDOWS_MSI)
     set(CPACK_GENERATOR "WIX")
     set(CPACK_WIX_UPGRADE_GUID "f3dd97dc-0b5e-411c-a991-4c7d423c06af")
 
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "RoboFish/LukasKanade_Tracker")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "RoboFish/lucaskanade_Tracker")
 
     set(CPACK_WIX_PROGRAM_MENU_FOLDER "RoboFish")
 	
