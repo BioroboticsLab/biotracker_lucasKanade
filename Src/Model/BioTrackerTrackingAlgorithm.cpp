@@ -4,6 +4,7 @@
 #include <chrono>
 #include "../Config.h"
 #include "../Controller/ControllerTrackingAlgorithm.h"
+#include "QDebug"
 
 BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IModel *parameter, IModel *trajectory) 
 {
@@ -51,7 +52,7 @@ void clampPosition(std::vector<cv::Point2f> &pos, int w, int h) {
     }
 }
 
-std::vector<cv::Point2f> getPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo) {
+std::vector<cv::Point2f> getPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, IModelAreaDescriptor *areaDescr) {
    
     std::vector<cv::Point2f> points;
     int trajNumber = 0;
@@ -60,7 +61,17 @@ std::vector<cv::Point2f> getPoints(TrackedTrajectory* trackedTrajectoryMajor, in
         if (t && t->getValid() && !t->getFixed()) {
             IModelTrackedPoint* p = dynamic_cast<IModelTrackedPoint*>(t->getChild(frameNo));
             if (p != nullptr) {
-                points.push_back(cv::Point2f(p->getX(), p->getY()));
+                if (true){ // change this if there is a switch to toggle cm or px saving; for now the pos will be saved in cm
+                    cv::Point2f pxP = cv::Point2f(p->getXpx(), p->getYpx());
+                    //cv::Point2f pxP = areaDescr->cmToPx(cmP);
+                    points.push_back(pxP);
+                }
+                else if(true){
+                    points.push_back(cv::Point2f(p->getXpx(), p->getYpx()));
+                }
+                else{
+                    qDebug() << "TRACKER:  Coordinate unit not supported ";
+                }
             }
             else {
                 points.push_back(cv::Point2f(100, 100));
@@ -72,7 +83,7 @@ std::vector<cv::Point2f> getPoints(TrackedTrajectory* trackedTrajectoryMajor, in
     return points;
 }
 
-void setPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, std::vector<cv::Point2f> points) {
+void setPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, std::vector<cv::Point2f> points, IModelAreaDescriptor *areaDescr) {
 
     int trajNumber = 0;
     for (int i = 0; i < trackedTrajectoryMajor->size(); i++) {
@@ -81,7 +92,15 @@ void setPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, std::vect
             cv::Point2f p = points[0];
             points.erase(points.begin());
             TrackedElement *e = new TrackedElement(t, "n.a.", t->getId());
-            e->setPoint(p);
+            if (true){ // fixed saving to cm for now (until switch is implemented)
+                e->setCoordinateUnit("cm");
+                e->setPoint(areaDescr->pxToCm(p));
+                e->setXpx(p.x);
+                e->setYpx(p.y);
+            }
+            else{
+                e->setPoint(p);
+            }
             t->add(e, frameNo);
 
             trajNumber++;
@@ -119,7 +138,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
 		return;
 	}
 
-    std::vector<cv::Point2f> prevPts = getPoints(_TrackedTrajectoryMajor, framenumber-1);
+    std::vector<cv::Point2f> prevPts = getPoints(_TrackedTrajectoryMajor, framenumber-1, _AreaInfo);
 
     if (_lastImage == nullptr || _lastImage->empty()) {
         _lastImage = p_image;
@@ -153,7 +172,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
         );
 
         clampPosition(newPoints, p_image->size().width, p_image->size().height);
-        setPoints(_TrackedTrajectoryMajor, framenumber, newPoints);
+        setPoints(_TrackedTrajectoryMajor, framenumber, newPoints, _AreaInfo);
     }
 
 

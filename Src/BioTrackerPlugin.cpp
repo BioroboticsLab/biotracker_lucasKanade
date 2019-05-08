@@ -7,6 +7,8 @@
 #include "View/TrackedElementView.h"
 #include "Utility/TrackedComponents/TrackedComponentFactory.h"
 
+#include "QDebug"
+
 BioTrackerPlugin::BioTrackerPlugin() {
 }
 
@@ -45,6 +47,9 @@ void BioTrackerPlugin::createPlugin() {
 	m_TrackerController = qobject_cast<ControllerTrackingAlgorithm *>(ctr2);
 
 	connectInterfaces();
+
+	qDebug() << "TRACKER: Lukas-Kanade-Tracker loaded!";
+
 }
 
 void BioTrackerPlugin::connectInterfaces() {
@@ -71,6 +76,8 @@ void BioTrackerPlugin::connectInterfaces() {
 	QObject::connect(this, &BioTrackerPlugin::emitSwapIds, ctrTrC, &ControllerTrackedComponent::receiveSwapIds, Qt::DirectConnection);
 	QObject::connect(this, &BioTrackerPlugin::emitToggleFixTrack, ctrTrC, &ControllerTrackedComponent::receiveToggleFixTrack, Qt::DirectConnection);
 	QObject::connect(this, &BioTrackerPlugin::emitCurrentFrameNumber, ctrTrC, &ControllerTrackedComponent::receiveCurrentFrameNumber, Qt::DirectConnection);
+
+	QObject::connect(this, &BioTrackerPlugin::emitAreaDescriptorUpdate, ctrTrC, &ControllerTrackedComponent::receiveAreaDescriptorUpdate, Qt::DirectConnection);
 }
 
 

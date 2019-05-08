@@ -93,15 +93,18 @@ void ControllerTrackedComponent::receiveAddTrajectory(QPoint position)
 
 	TrackedTrajectory* newTraj = new TrackedTrajectory();
 	TrackedElement* firstElem = new TrackedElement(newTraj, "n.a.", newTraj->getId());
-	firstElem->setX(position.x());
-	firstElem->setY(position.y());
+	cv::Point2f pxP = cv::Point2f(position.x(), position.y());
+	firstElem->setPoint(m_areaDescr->pxToCm(pxP));
+	firstElem->setXpx(position.x());
+	firstElem->setYpx(position.y());
 	firstElem->setTime(start);
 	firstElem->setValid(true);
+	firstElem->setCoordinateUnit("cm");
 	newTraj->add(firstElem, m_currentFrameNumber);
 	TrackedTrajectory* allTraj = qobject_cast<TrackedTrajectory*>(m_Model);
 	if (allTraj) {
 		allTraj->add(newTraj);
-		qDebug() << "TRACKER: Track added at" << firstElem->getX() << "," << firstElem->getY();
+		qDebug() << "TRACKER: Track added at" << firstElem->getXpx() << "," << firstElem->getYpx() << " (px)";
 	}
 }
 
@@ -112,8 +115,10 @@ void ControllerTrackedComponent::receiveMoveElement(IModelTrackedTrajectory* tra
 		TrackedElement* element = dynamic_cast<TrackedElement*>(traj->getChild(frameNumber));
 		//TODO setX, setY do not work correctly as pose not yet accessible
         if (element) {
-            element->setX(position.x());
-            element->setY(position.y());
+			cv::Point2f pxP = cv::Point2f(position.x(), position.y()); // hardcoded to cm for now
+			element->setPoint(m_areaDescr->pxToCm(pxP));
+			element->setXpx(position.x());
+			element->setYpx(position.y());
             //qDebug() << "plugin-pos:" << position;
         }
         else {
@@ -160,4 +165,9 @@ void ControllerTrackedComponent::receiveEntityRotation(IModelTrackedTrajectory *
 void ControllerTrackedComponent::receiveCurrentFrameNumber(uint framenumber)
 {
 	m_currentFrameNumber = (int)framenumber;
+}
+
+void ControllerTrackedComponent::receiveAreaDescriptorUpdate(IModelAreaDescriptor * areaDescr)
+{
+	m_areaDescr = areaDescr;
 }

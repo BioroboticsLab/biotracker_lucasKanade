@@ -4,6 +4,7 @@
 #include "Interfaces/IController/IController.h"
 #include "QPoint"
 #include "Interfaces/IModel/IModelTrackedTrajectory.h"
+#include "Interfaces/IModel/IModelAreaDescriptor.h"
 #include "../Config.h"
 
 class ControllerTrackedComponent : public IController
@@ -29,6 +30,8 @@ public Q_SLOTS:
 		void receiveToggleFixTrack(IModelTrackedTrajectory* trajectory, bool toggle);
 		void receiveEntityRotation(IModelTrackedTrajectory* trajectory, double angle, uint frameNumber);
 		void receiveCurrentFrameNumber(uint framenumber);
+		
+		void receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
 
 	// IController interface
 protected:
@@ -40,6 +43,7 @@ protected:
 
 	//members
 	int m_currentFrameNumber;
+	IModelAreaDescriptor* m_areaDescr;
 };
 
 #endif // CONTROLLERTRACKEDCOMPONENT_H
