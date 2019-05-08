@@ -14,6 +14,7 @@ BioTrackerTrackingAlgorithm::BioTrackerTrackingAlgorithm(IController *parent, IM
 
     _lastImage = nullptr;
     _lastFramenumber = -1;
+    _coordUnit = "cm";
 }
 
 
@@ -61,17 +62,8 @@ std::vector<cv::Point2f> getPoints(TrackedTrajectory* trackedTrajectoryMajor, in
         if (t && t->getValid() && !t->getFixed()) {
             IModelTrackedPoint* p = dynamic_cast<IModelTrackedPoint*>(t->getChild(frameNo));
             if (p != nullptr) {
-                if (true){ // change this if there is a switch to toggle cm or px saving; for now the pos will be saved in cm
-                    cv::Point2f pxP = cv::Point2f(p->getXpx(), p->getYpx());
-                    //cv::Point2f pxP = areaDescr->cmToPx(cmP);
-                    points.push_back(pxP);
-                }
-                else if(true){
-                    points.push_back(cv::Point2f(p->getXpx(), p->getYpx()));
-                }
-                else{
-                    qDebug() << "TRACKER:  Coordinate unit not supported ";
-                }
+                cv::Point2f pxP = cv::Point2f(p->getXpx(), p->getYpx());
+                points.push_back(pxP);
             }
             else {
                 points.push_back(cv::Point2f(100, 100));
@@ -83,7 +75,8 @@ std::vector<cv::Point2f> getPoints(TrackedTrajectory* trackedTrajectoryMajor, in
     return points;
 }
 
-void setPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, std::vector<cv::Point2f> points, IModelAreaDescriptor *areaDescr) {
+void setPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, std::vector<cv::Point2f> points, IModelAreaDescriptor *areaDescr, QString coordUnit) {
+    std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
 
     int trajNumber = 0;
     for (int i = 0; i < trackedTrajectoryMajor->size(); i++) {
@@ -92,15 +85,24 @@ void setPoints(TrackedTrajectory* trackedTrajectoryMajor, int frameNo, std::vect
             cv::Point2f p = points[0];
             points.erase(points.begin());
             TrackedElement *e = new TrackedElement(t, "n.a.", t->getId());
-            if (true){ // fixed saving to cm for now (until switch is implemented)
+            if (coordUnit == "cm"){
                 e->setCoordinateUnit("cm");
                 e->setPoint(areaDescr->pxToCm(p));
-                e->setXpx(p.x);
-                e->setYpx(p.y);
             }
-            else{
+            else if (coordUnit == "px"){
+                e->setCoordinateUnit("px");
                 e->setPoint(p);
             }
+            else{
+                qDebug() << "TRACKER:  Unsupported coordinate unit: " << coordUnit << " ... Set to px.";
+				e->setCoordinateUnit("px");
+				e->setPoint(p);
+            }
+            e->setXpx(p.x);
+            e->setYpx(p.y);
+
+            e->setTime(start);
+        
             t->add(e, frameNo);
 
             trajNumber++;
@@ -172,7 +174,7 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
         );
 
         clampPosition(newPoints, p_image->size().width, p_image->size().height);
-        setPoints(_TrackedTrajectoryMajor, framenumber, newPoints, _AreaInfo);
+        setPoints(_TrackedTrajectoryMajor, framenumber, newPoints, _AreaInfo, _coordUnit);
     }
 
 
@@ -185,4 +187,10 @@ void BioTrackerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> p_image, u
     _lastImage = p_image;
     _lastFramenumber = framenumber;
 }
+
+void BioTrackerTrackingAlgorithm::setCoordUnit(QString unit)
+{
+    _coordUnit = unit;
+}
+
 

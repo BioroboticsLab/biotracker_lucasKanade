@@ -30,7 +30,7 @@ public Q_SLOTS:
 	void doTracking(std::shared_ptr<cv::Mat> image, uint framenumber) override;
 	void receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
     void receiveParametersChanged();
-
+	void setCoordUnit(QString unit);
 private:
 	void refreshPolygon();
     void sendSelectedImage(std::map<std::string, std::shared_ptr<cv::Mat>>* images);
@@ -47,6 +47,7 @@ private:
     std::shared_ptr<cv::Mat> _lastImage;
     uint _lastFramenumber;
 	Config *_cfg;
+	QString _coordUnit;
 };
 
 #endif // BIOTRACKERTRACKINGALGORITHM_H

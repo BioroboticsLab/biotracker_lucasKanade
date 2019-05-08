@@ -17,6 +17,7 @@ void ControllerTrackingAlgorithm::connectControllerToController()
 	QPointer< ControllerTrackedComponent > ctrComponent = qobject_cast<ControllerTrackedComponent *>(ctr);
 
 	m_TrackedTrajectoryMajor = ctrComponent->getModel();
+
 }
 
 void ControllerTrackingAlgorithm::doTracking(std::shared_ptr<cv::Mat> mat, uint number)
@@ -41,6 +42,13 @@ void ControllerTrackingAlgorithm::createModel()
 void ControllerTrackingAlgorithm::createView()
 {
     m_View = new TrackerParameterView(0, this, m_TrackingParameter);
+	TrackerParameterView *trackingParamView = dynamic_cast<TrackerParameterView *>(m_View);
+    QObject::connect(trackingParamView, &TrackerParameterView::emitCoordUnit, this, &ControllerTrackingAlgorithm::receiveCoordUnitChange);
+
+	// send the ControllerTrackedComponent the coordinate unit upon change (initially cm)
+	IController * ctr = m_BioTrackerContext->requestController(ENUMS::CONTROLLERTYPE::COMPONENT);
+	QPointer< ControllerTrackedComponent > ctrComponent = qobject_cast<ControllerTrackedComponent *>(ctr);
+	QObject::connect(trackingParamView, &TrackerParameterView::emitCoordUnit, ctrComponent, &ControllerTrackedComponent::receiveCoordUnitChange);
 }
 
 void ControllerTrackingAlgorithm::connectModelToController()
@@ -77,4 +85,9 @@ void ControllerTrackingAlgorithm::receiveChangeDisplayImage(QString str) {
 
 void ControllerTrackingAlgorithm::receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr) {
 	Q_EMIT emitAreaDescriptorUpdate(areaDescr);
+}
+
+void ControllerTrackingAlgorithm::receiveCoordUnitChange(QString unit){	    
+	BioTrackerTrackingAlgorithm *trackingAlg = qobject_cast<BioTrackerTrackingAlgorithm *>(m_Model);
+	trackingAlg->setCoordUnit(unit);
 }

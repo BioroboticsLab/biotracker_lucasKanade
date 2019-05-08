@@ -18,12 +18,14 @@ public:
 
 private slots:
 	void on_pushButton_clicked();
-
+    void on_rbCm_toggled(bool checked);
+    void on_rbPx_toggled(bool checked);
 	
 public:
 	signals:
     void trackingAreaType(int v);
     void parametersChanged();
+    void emitCoordUnit(QString unit);
 
 private:
     Ui::TrackerParameterView *ui;

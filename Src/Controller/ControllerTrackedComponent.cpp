@@ -9,6 +9,7 @@ ControllerTrackedComponent::ControllerTrackedComponent(QObject *parent, IBioTrac
 	IController(parent, context, ctr)
 {
 	m_currentFrameNumber = 0;
+	m_coordUnit = "cm";
 }
 
 void ControllerTrackedComponent::createView()
@@ -93,13 +94,23 @@ void ControllerTrackedComponent::receiveAddTrajectory(QPoint position)
 
 	TrackedTrajectory* newTraj = new TrackedTrajectory();
 	TrackedElement* firstElem = new TrackedElement(newTraj, "n.a.", newTraj->getId());
+	firstElem->setCoordinateUnit(m_coordUnit);
 	cv::Point2f pxP = cv::Point2f(position.x(), position.y());
-	firstElem->setPoint(m_areaDescr->pxToCm(pxP));
+	if(m_coordUnit == "cm"){
+		firstElem->setPoint(m_areaDescr->pxToCm(pxP));
+	}
+	else if(m_coordUnit == "px"){
+		firstElem->setPoint(pxP);
+	}
+	else{
+		qDebug() << "TRACKER:  Unsupported coordinate unit: " << m_coordUnit << " ... Set to px.";
+		firstElem->setCoordinateUnit("px");
+		firstElem->setPoint(pxP);
+	}
 	firstElem->setXpx(position.x());
 	firstElem->setYpx(position.y());
 	firstElem->setTime(start);
 	firstElem->setValid(true);
-	firstElem->setCoordinateUnit("cm");
 	newTraj->add(firstElem, m_currentFrameNumber);
 	TrackedTrajectory* allTraj = qobject_cast<TrackedTrajectory*>(m_Model);
 	if (allTraj) {
@@ -115,8 +126,20 @@ void ControllerTrackedComponent::receiveMoveElement(IModelTrackedTrajectory* tra
 		TrackedElement* element = dynamic_cast<TrackedElement*>(traj->getChild(frameNumber));
 		//TODO setX, setY do not work correctly as pose not yet accessible
         if (element) {
-			cv::Point2f pxP = cv::Point2f(position.x(), position.y()); // hardcoded to cm for now
-			element->setPoint(m_areaDescr->pxToCm(pxP));
+			cv::Point2f pxP = cv::Point2f(position.x(), position.y()); 
+
+			if(element->getCoordinateUnit() == "cm"){
+				element->setPoint(m_areaDescr->pxToCm(pxP));
+			}
+			else if(element->getCoordinateUnit() == "px"){
+				element->setPoint(pxP);
+			}
+			else{
+				qDebug() << "TRACKER:  Unsupported coordinate unit: " << m_coordUnit << " ... Set to px.";
+				element->setCoordinateUnit("px");
+				element->setPoint(pxP);
+			}
+
 			element->setXpx(position.x());
 			element->setYpx(position.y());
             //qDebug() << "plugin-pos:" << position;
@@ -171,3 +194,10 @@ void ControllerTrackedComponent::receiveAreaDescriptorUpdate(IModelAreaDescripto
 {
 	m_areaDescr = areaDescr;
 }
+
+void ControllerTrackedComponent::receiveCoordUnitChange(QString unit)
+{
+	m_coordUnit = unit;
+}
+
+

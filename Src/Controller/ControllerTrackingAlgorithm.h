@@ -41,6 +41,7 @@ private Q_SLOTS:
     void receiveCvMatFromTrackingAlgorithm(std::shared_ptr<cv::Mat> mat, QString name);
     void receiveTrackingDone(uint framenumber);
 	void receiveChangeDisplayImage(QString str);
+    void receiveCoordUnitChange(QString unit);
 
 private:
     IModel* m_TrackingParameter;

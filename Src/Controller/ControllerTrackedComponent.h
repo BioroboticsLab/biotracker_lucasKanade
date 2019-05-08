@@ -32,6 +32,7 @@ public Q_SLOTS:
 		void receiveCurrentFrameNumber(uint framenumber);
 		
 		void receiveAreaDescriptorUpdate(IModelAreaDescriptor *areaDescr);
+		void receiveCoordUnitChange(QString unit);
 
 	// IController interface
 protected:
@@ -44,6 +45,7 @@ protected:
 	//members
 	int m_currentFrameNumber;
 	IModelAreaDescriptor* m_areaDescr;
+	QString m_coordUnit;
 };
 
 #endif // CONTROLLERTRACKEDCOMPONENT_H

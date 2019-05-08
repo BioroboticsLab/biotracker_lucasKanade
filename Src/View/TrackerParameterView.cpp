@@ -29,6 +29,20 @@ void TrackerParameterView::on_pushButton_clicked()
     Q_EMIT parametersChanged();
 }
 
+void TrackerParameterView::on_rbCm_toggled(bool checked)
+{
+    if(checked){
+        Q_EMIT emitCoordUnit("cm");
+    }
+}
+
+void TrackerParameterView::on_rbPx_toggled(bool checked)
+{
+    if(checked){
+        Q_EMIT emitCoordUnit("px");
+    }
+}
+
 void TrackerParameterView::getNotified()
 {
     TrackerParameter *parameter = qobject_cast<TrackerParameter *>(getModel());
