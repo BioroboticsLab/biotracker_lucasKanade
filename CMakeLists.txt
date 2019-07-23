@@ -45,9 +45,9 @@ if(PACKAGE_WINDOWS_MSI)
     set(CPACK_GENERATOR "WIX")
     set(CPACK_WIX_UPGRADE_GUID "f3dd97dc-0b5e-411c-a991-4c7d423c06af")
 
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "RoboFish/lucaskanade_Tracker")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "BioTracker/lucaskanade_Tracker")
 
-    set(CPACK_WIX_PROGRAM_MENU_FOLDER "RoboFish")
+    set(CPACK_WIX_PROGRAM_MENU_FOLDER "BioTracker")
 	
 	set(CPACK_WIX_LICENSE_RTF ${CMAKE_SOURCE_DIR}/cmake/WIX/licence.rtf)
 	set(CPACK_WIX_TEMPLATE "${CMAKE_SOURCE_DIR}/cmake/WIX/WIX.template.in")
